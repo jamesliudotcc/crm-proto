@@ -4,6 +4,7 @@ export interface Contact {
   name: string;
   company: string;
   followUpDate: number;
+  nextFollowUpShouldBe: TouchTypes;
   touches: TouchTypes[];
 }
 
@@ -17,5 +18,11 @@ export interface Touch {
 export interface NewTouch {
   contactId: number;
   nextFollowUp: number;
+  nextFollowUpShouldBe: TouchTypes;
   newTouch: Touch;
+}
+
+export interface User {
+  name: string;
+  contacts: Contact[];
 }
