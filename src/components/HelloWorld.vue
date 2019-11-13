@@ -12,33 +12,9 @@
     </form>
     <p>Follow up with {{contacts[selectedContact].name}} within {{followUpDateReadable}}</p>
     <h2>Record a touch</h2>
-    <form @submit.prevent="handleSubmit">
-      <p>
-        I had a
-        <!-- TODO inflect -->
-        <select v-model="selectedCurrentFollowUp">
-          <option
-            v-for="option in touchOptions"
-            v-bind:value="option"
-            v-bind:key="option"
-          >{{ option }}</option>
-        </select>
-        with {{ contacts[selectedContact].name }}.
-      </p>
-      <textarea v-model="note" rows="4" cols="50"></textarea>
-      <p>
-        The next follow-up is a
-        <select v-model="selectedNextFollowUp">
-          <option
-            v-for="option in touchOptions"
-            v-bind:value="option"
-            v-bind:key="option"
-          >{{ option }}</option>
-        </select> at
-        <input type="date" v-model="nextFollowUpDate" />
-        <input type="time" v-model="nextFollowUpTime" />
-        <button type="submit">Submit</button>
-      </p>
+    <form @submit.prevent="submitAddTouch">
+      <!-- this is a componenet -->
+      <EditTouch :selectedContact="selectedContact" />
     </form>
     <h2>Add a contact</h2>
   </div>
@@ -51,8 +27,9 @@ import { State, Mutation } from 'vuex-class';
 import { addBusinessDays, format, formatDistance, getUnixTime } from 'date-fns';
 
 import { Contact, Touch, TouchTypes, User, NewTouch } from '../types';
+import EditTouch from './EditTouch.vue';
 
-@Component
+@Component({ components: { EditTouch } })
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
   // Comes from vuex-class
@@ -61,7 +38,6 @@ export default class HelloWorld extends Vue {
 
   @Mutation addTouch!: (touch: NewTouch) => void;
 
-  // Bind selected contact with local state
   selectedContact = 0;
   selectedCurrentFollowUp: TouchTypes = 'email';
   selectedNextFollowUp: TouchTypes = 'email';
@@ -74,22 +50,23 @@ export default class HelloWorld extends Vue {
     return this.user.contacts.map((contact: {}, i: number) => ({ ...contact, index: i }));
   }
   get followUpDateReadable() {
-    return formatDistance(this.user.contacts[this.selectedContact].followUpDate, Date.now());
+    // TODO [0] is wrong. Fix.
+    return formatDistance(this.user.contacts[this.selectedContact].touches[0].followUpDate, Date.now());
   }
-  get nextFollowUpUnixTime() {
-    return getUnixTime(new Date(`${this.nextFollowUpDate} ${this.nextFollowUpTime}`));
+  get nextFollowUpDateTime() {
+    return new Date(`${this.nextFollowUpDate} ${this.nextFollowUpTime}`);
   }
 
   // Methods
-  handleSubmit() {
+  submitAddTouch() {
     this.addTouch({
       contactId: this.selectedContact,
-      nextFollowUp: this.nextFollowUpUnixTime * 1000,
-      nextFollowUpShouldBe: 'email',
       newTouch: {
         type: this.selectedCurrentFollowUp,
-        date: Date.now() * 1000,
+        date: new Date(),
         note: this.note,
+        followUpDate: this.nextFollowUpDateTime,
+        nextFollowUpType: this.selectedNextFollowUp,
       },
     });
   }

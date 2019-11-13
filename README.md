@@ -8,6 +8,15 @@ I also want to create a coach view where an overview of mutliple jobseekers can 
 
 For now, the back end is mocked out using Vuex.
 
+Todo user stories:
+
+A view for upcoming followups. Call this an agenda.
+It is possible for followups to be owed.
+In the agenda view, there is a checkbox for mark complete. When clicked, it opens up further to create a followup. If there is at least one followup in the future, then it is possible to mark no new followup. Otherwise, it is required to create a followup (e.g. email) to mark completed.
+Exception. After 2 (3?) emails in a row, it is possible to mark a contact dead.
+Possible to fake "today" for the purpose of the app for demoing.
+A view per relationship.
+
 ## Project setup
 
 ```

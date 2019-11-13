@@ -1,24 +1,24 @@
-export type TouchTypes = 'email' | 'coffee' | 'meal' | 'drink' | 'meeting' | 'phone';
+export type TouchTypes = 'initial' | 'email' | 'coffee' | 'meal' | 'drink' | 'meeting' | 'phone';
 
 export interface Contact {
   name: string;
+  email: string;
+  phone: string;
   company: string;
-  followUpDate: number;
-  nextFollowUpShouldBe: TouchTypes;
-  touches: TouchTypes[];
+  touches: Touch[];
 }
 
 export interface Touch {
   type: TouchTypes;
-  date: number;
+  date: Date;
   note: string;
+  followUpDate: Date;
+  nextFollowUpType: TouchTypes;
   // New fields should be added for tracking
 }
 
 export interface NewTouch {
   contactId: number;
-  nextFollowUp: number;
-  nextFollowUpShouldBe: TouchTypes;
   newTouch: Touch;
 }
 
