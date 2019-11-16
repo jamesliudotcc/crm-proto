@@ -14,7 +14,7 @@
     <h2>Record a touch</h2>
     <form @submit.prevent="submitAddTouch">
       <!-- this is a componenet -->
-      <EditTouch :selectedContact="selectedContact" />
+      <EditTouch :selectedContact="selectedContact" v-bind:newTouch="newTouch" />
     </form>
     <h2>Add a contact</h2>
   </div>
